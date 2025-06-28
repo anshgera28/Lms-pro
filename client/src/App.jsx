@@ -1,27 +1,12 @@
 
-// import './App.css'
-
-// function App() {
-
-//   return (
-//    <>
-
-//    </>
-//   )
-// }
-
-// export default App
-
-
-
-import { Button } from "@/components/ui/button"
+import Login from "./pages/login";
  
 function App() {
   return (
-    <div className="flex min-h-svh flex-col items-center justify-center">
-      <Button>Click me</Button>
-    </div>
-  )
+    <main className="min-h-screen p-4">
+      <Login />
+    </main>
+  );
 }
  
-export default App
+export default App;
