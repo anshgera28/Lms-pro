@@ -1,4 +1,4 @@
-import { AppWindowIcon, CodeIcon } from "lucide-react"
+import { AppWindowIcon, CodeIcon, Loader2 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -12,6 +12,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useState } from "react"
+import { useLoginUserMutation, useRegisterUserMutation } from "../features/api/authApi"
 
 import {
   Tabs,
@@ -23,7 +24,11 @@ import {
 const Login = () => {
   const [signupInput, setSignupInput] = useState({name:"",email:"",password:""})
   const [loginInput, setLoginInput] = useState({email:"",password:""})
+  const [error, setError] = useState("")
 
+  const[registerUser, {data:registerData, error:registerError, isLoading:registerLoading, isSuccess:registerSuccess}] = useRegisterUserMutation()
+  const[loginUser, {data:loginData, error:loginError, isLoading:loginLoading, isSuccess:loginSuccess}] = useLoginUserMutation()
+  
   const changeInputHandler = (e, type) => {
     const {name,value} = e.target
     if(type === "signup"){
@@ -35,9 +40,74 @@ const Login = () => {
     
   }
 
-  const handleRegistration = (type) => {
-    const inputData = type === "signup" ? signupInput : loginInput
-   console.log(inputData);
+  const handleRegistration = async (type) => {
+    setError(""); // Clear previous errors
+    try {
+      const inputData = type === "signup" ? {
+        name: signupInput.name.trim(),
+        email: signupInput.email.trim(),
+        password: signupInput.password
+      } : {
+        email: loginInput.email.trim(),
+        password: loginInput.password
+      };
+      
+      console.log('Sending request with data:', {
+        type,
+        inputData: {
+          ...inputData,
+          password: '***' // Don't log actual password
+        },
+        timestamp: new Date().toISOString()
+      });
+      
+      // Basic validation
+      if (type === "signup" && (!inputData.name || !inputData.email || !inputData.password)) {
+        const errorMsg = "All fields are required";
+        console.warn('Validation failed:', errorMsg);
+        setError(errorMsg);
+        return;
+      }
+      
+      if (!inputData.email || !inputData.password) {
+        const errorMsg = "Email and password are required";
+        console.warn('Validation failed:', errorMsg);
+        setError(errorMsg);
+        return;
+      }
+      
+      const action = type === "signup" ? registerUser : loginUser;
+      console.log('Executing action:', type);
+      
+      const result = await action(inputData);
+      console.log('API Response:', {
+        type,
+        success: !result.error,
+        data: result.data,
+        error: result.error,
+        timestamp: new Date().toISOString()
+      });
+      
+      if (result.error) {
+        const errorMessage = result.error.data?.message || 'An error occurred. Please try again.';
+        console.error('API Error:', {
+          status: result.error.status,
+          message: errorMessage,
+          fullError: result.error
+        });
+        setError(errorMessage);
+      } else {
+        console.log('Success:', result.data);
+      }
+    } catch (error) {
+      console.error('Unexpected error during registration/login:', {
+        error,
+        message: error.message,
+        stack: error.stack,
+        timestamp: new Date().toISOString()
+      });
+      setError('An unexpected error occurred. Please try again.');
+    }
   }
   
   return (
@@ -53,7 +123,12 @@ const Login = () => {
             <CardHeader>
               <CardTitle>Signup</CardTitle>
               <CardDescription>
-              Create a new account and click signup when you are done.
+                Create a new account and click signup when you are done.
+                {error && (
+                  <div className="mt-2 text-sm text-red-500">
+                    {error}
+                  </div>
+                )}
               </CardDescription>
             </CardHeader>
             <CardContent className="grid gap-6">
@@ -71,7 +146,15 @@ const Login = () => {
               </div>
             </CardContent>
             <CardFooter>
-              <Button onClick = {() => handleRegistration("signup")}>Signup</Button>
+              <Button disabled={registerLoading} onClick={() => handleRegistration("signup")}>
+                {
+                  registerLoading ? (
+                    <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />please wait...
+                    </>
+                  ):("Signup")
+                }
+              </Button>
             </CardFooter>
           </Card>
         </TabsContent>
@@ -94,7 +177,11 @@ const Login = () => {
               </div>
             </CardContent>
             <CardFooter>
-              <Button onClick = {() => handleRegistration("login")}>Login</Button>
+              <Button disabled = {loginLoading} onClick = {() => handleRegistration("login")}>{loginLoading ? (
+                <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />please wait...
+                </>
+              ):("Login")}</Button>
             </CardFooter>
           </Card>
         </TabsContent>
