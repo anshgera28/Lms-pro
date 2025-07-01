@@ -11,8 +11,9 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useLoginUserMutation, useRegisterUserMutation } from "../features/api/authApi"
+import { toast } from "sonner"
 
 import {
   Tabs,
@@ -109,6 +110,21 @@ const Login = () => {
       setError('An unexpected error occurred. Please try again.');
     }
   }
+
+  useEffect(() => {
+    if(registerSuccess && registerData){
+        toast.success(registerData.message||"Signup successfully")
+    }
+    if(loginSuccess && loginData){
+        toast.success(loginData.message||"Login successfully")
+    }
+    if(registerError){
+        toast.error(registerError.data.message||"Signup failed")
+    }
+    if(loginError){
+        toast.error(loginError.data.message||"Login failed")
+    }
+  }, [loginLoading, registerLoading, loginData, registerData, loginError, registerError])
   
   return (
   <div className="flex w-full items-center justify-center">
