@@ -127,7 +127,7 @@ const Login = () => {
   }, [loginLoading, registerLoading, loginData, registerData, loginError, registerError])
   
   return (
-  <div className="flex w-full items-center justify-center">
+  <div className="flex w-full items-center justify-center mt-20">
       <div className="flex w-full max-w-sm flex-col gap-6">
       <Tabs defaultValue="account">
         <TabsList>
