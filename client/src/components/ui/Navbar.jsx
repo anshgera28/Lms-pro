@@ -4,6 +4,10 @@ import { School } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import DarkMode from '@/DarkMode'
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Menu } from 'lucide-react'
+
 
 import {
     DropdownMenu,
@@ -13,7 +17,21 @@ import {
     DropdownMenuSeparator,
     DropdownMenuShortcut,
     DropdownMenuTrigger,
-} from "./dropdown-menu" 
+} from "./dropdown-menu"
+
+
+import {
+
+   Sheet,
+  SheetTrigger,
+  SheetClose,
+  SheetContent,
+  SheetHeader,
+  SheetFooter,
+  SheetTitle,
+  SheetDescription,
+} from "./sheet"
+
 
 
 const Navbar = () => {
@@ -71,7 +89,13 @@ const Navbar = () => {
                     <DarkMode />
                 </div>
             </div>
-         
+            {/* mobile devices  */}
+            <div className=' flex md:hidden items-center justify-between px-4 h-full'>
+                <h1 className='font-extrabold text-2xl '>E-learning</h1>
+                  <MobileNavbar />
+            </div>
+
+
         </div>
     )
 }
@@ -79,3 +103,34 @@ const Navbar = () => {
 export default Navbar
 
 
+
+const MobileNavbar = () => {
+
+    return (
+           <Sheet>
+            <SheetTrigger asChild>
+                <Button size="icon" className='rounded-full bg-gray-200 hover:bg-gray-200 ' variant="outline">
+                    <Menu size={20} />
+                </Button>
+            </SheetTrigger>
+                 <SheetContent className='flex flex-col'>
+                   <SheetHeader className= 'flex flex-row items-center justify-between mt-2'>
+                     <SheetTitle>E-learning</SheetTitle>
+                    <DarkMode/>
+                </SheetHeader>
+
+                <nav className='flex flex-col space-y-4'>
+                    <span>My Learning</span>
+                    <span>Edit-Profile</span>
+                    <p>Logout</p>
+                  </nav>
+                   <SheetFooter>
+                     <Button type="submit">Save changes</Button>
+                     <SheetClose asChild>
+                       <Button variant="outline">Close</Button>
+                     </SheetClose>
+                   </SheetFooter>
+                 </SheetContent>
+               </Sheet>
+    )
+}
