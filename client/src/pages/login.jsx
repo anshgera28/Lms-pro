@@ -1,4 +1,5 @@
 import { AppWindowIcon, CodeIcon, Loader2 } from "lucide-react"
+import { useNavigate } from "react-router-dom"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -29,6 +30,7 @@ const Login = () => {
 
   const[registerUser, {data:registerData, error:registerError, isLoading:registerLoading, isSuccess:registerSuccess}] = useRegisterUserMutation()
   const[loginUser, {data:loginData, error:loginError, isLoading:loginLoading, isSuccess:loginSuccess}] = useLoginUserMutation()
+  const navigate = useNavigate()
   
   const changeInputHandler = (e, type) => {
     const {name,value} = e.target
@@ -117,6 +119,7 @@ const Login = () => {
     }
     if(loginSuccess && loginData){
         toast.success(loginData.message||"Login successfully")
+        navigate("/")
     }
     if(registerError){
         toast.error(registerError.data.message||"Signup failed")

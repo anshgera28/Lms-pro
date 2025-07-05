@@ -19,8 +19,8 @@ const HeroSection = () => {
           
                 </form> */}
                 <form
-  action=""
-  className="
+                    action=""
+                    className="
     flex items-center 
     bg-white 
     dark:bg-white 
@@ -32,11 +32,11 @@ const HeroSection = () => {
     mb-6 
     w-full
   "
->
-  <input
-    type="text"
-    placeholder="Search for courses"
-    className="
+                >
+                    <input
+                        type="text"
+                        placeholder="Search for courses"
+                        className="
       flex-grow 
       bg-white 
       text-black 
@@ -49,10 +49,10 @@ const HeroSection = () => {
       placeholder-gray-500 
       dark:placeholder-gray-500
     "
-  />
-  <Button
-    type="submit"
-    className="
+                    />
+                    <Button
+                        type="submit"
+                        className="
       bg-blue-600 
       text-white 
       px-6 
@@ -67,13 +67,16 @@ const HeroSection = () => {
       focus-visible:ring-0 
       border-none 
       outline-none
-      shadow-none
+      shadow-none 
       mr-2
     "
-  >
-    Search
-  </Button>
-</form>
+                    >
+                        Search
+                    </Button>
+                </form>
+
+                <Button className='bg-white dark:bg-gray text-black dark:text-black hover:bg-blue-600 dark:hover:bg-purple-200 rounded-full'>Explore Courses</Button>
+
 
 
             </div>
