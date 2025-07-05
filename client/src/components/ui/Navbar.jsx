@@ -4,9 +4,8 @@ import { School } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import DarkMode from '@/DarkMode'
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { Menu } from 'lucide-react'
+import { Separator } from "@radix-ui/react-dropdown-menu"
 
 
 import {
@@ -29,13 +28,14 @@ import {
   SheetHeader,
   SheetFooter,
   SheetTitle,
-  SheetDescription,
+
 } from "./sheet"
 
 
 
 const Navbar = () => {
-    const user = false // Replace this with actual auth logic
+    const user = true // Replace this with actual auth logic
+
 
     return (
         <div className='h-16 dark:bg-[#0A0A0A] bg-white border-b dark:border-b-gray-800 border-b-gray-200 fixed top-0 left-0 right-0 z-10'>
@@ -105,6 +105,7 @@ export default Navbar
 
 
 const MobileNavbar = () => {
+    const role = "instructor"
 
     return (
            <Sheet>
@@ -114,22 +115,27 @@ const MobileNavbar = () => {
                 </Button>
             </SheetTrigger>
                  <SheetContent className='flex flex-col'>
-                   <SheetHeader className= 'flex flex-row items-center justify-between mt-2'>
+                   <SheetHeader className= 'flex flex-row items-center justify-between mt-4'>
                      <SheetTitle>E-learning</SheetTitle>
                     <DarkMode/>
                 </SheetHeader>
-
-                <nav className='flex flex-col space-y-4'>
+                <Separator className='mr-2'/>
+                <nav className='flex flex-col space-y-4 ml-4'>
                     <span>My Learning</span>
                     <span>Edit-Profile</span>
                     <p>Logout</p>
-                  </nav>
-                   <SheetFooter>
-                     <Button type="submit">Save changes</Button>
+                </nav>
+                {
+                    role === "instructor" && (
+                     <SheetFooter>
+                     <Button type="submit">Dashboard</Button>
                      <SheetClose asChild>
                        <Button variant="outline">Close</Button>
                      </SheetClose>
                    </SheetFooter>
+                    )
+                }
+
                  </SheetContent>
                </Sheet>
     )
