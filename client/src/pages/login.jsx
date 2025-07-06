@@ -153,15 +153,15 @@ const Login = () => {
             <CardContent className="grid gap-6">
               <div className="grid gap-3">
                 <Label htmlFor="name">Name</Label>
-                <Input type="text" name = "name" value = { signupInput.name} onChange={(e) => changeInputHandler(e,"signup")} placeholder="Enter your name"  required = "true"/>
+                <Input type="text" name = "name" value = { signupInput.name} onChange={(e) => changeInputHandler(e,"signup")} placeholder="Enter your name"  required = {true}/>
               </div>
               <div className="grid gap-3">
                 <Label htmlFor="email">Email</Label>
-                <Input type="email" name = "email" value = { signupInput.email} onChange={(e) => changeInputHandler(e,"signup")} placeholder="Enter your email" required = "true"/>
+                <Input type="email" name = "email" value = { signupInput.email} onChange={(e) => changeInputHandler(e,"signup")} placeholder="Enter your email" required = {true}/>
               </div>
               <div className="grid gap-3">
                 <Label htmlFor="password">Password</Label>
-                <Input type="password" name = "password" value = { signupInput.password} onChange={(e) => changeInputHandler(e,"signup")} placeholder="Enter your password" required = "true"/>
+                <Input type="password" name = "password" value = { signupInput.password} onChange={(e) => changeInputHandler(e,"signup")} placeholder="Enter your password" required = {true}/>
               </div>
             </CardContent>
             <CardFooter>
