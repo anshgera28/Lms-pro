@@ -6,6 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import DarkMode from '@/DarkMode'
 import { Menu } from 'lucide-react'
 import { Separator } from "@radix-ui/react-dropdown-menu"
+import { Link } from "react-router-dom"
 
 
 import {
@@ -62,11 +63,11 @@ const Navbar = () => {
                             <DropdownMenuContent className="w-56" align="end">
                                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                                 <DropdownMenuItem>
-                                    my-learning
+                                    <Link to="/my-learning">My Learning</Link>
                                     <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
                                 </DropdownMenuItem>
                                 <DropdownMenuItem>
-                                    edit profile
+                                    Edit Profile
                                     <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />

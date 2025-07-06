@@ -2,6 +2,9 @@ import React from 'react'
 import { Skeleton } from '@/components/ui/skeleton'
 import Course from './Course'
 
+
+const courses = [1,2,3,4,5,6,7,8]
+
 const  Courses = () => {
   const isLoading = false
   return (
@@ -10,7 +13,7 @@ const  Courses = () => {
             <h2 className='text-2xl font-bold mb-10 text-center'>Our Courses</h2>
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6'>
             {
-              isLoading ?Array.from({length: 8}).map((_, index) => <CourseSkeleton key={index} />):(<Course />)
+              isLoading ?Array.from({length: 8}).map((_, index) => <CourseSkeleton key={index} />):courses.map((course,index)=>(<Course key={index}/>))
             }
 
             </div>
