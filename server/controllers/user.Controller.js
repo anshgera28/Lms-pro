@@ -3,6 +3,7 @@ import {User} from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import { generateToken } from "../utils/generateToken.js";
 
+
 export const register = async (req,res) => {
 
     try{
@@ -56,3 +57,30 @@ export const login = async (req,res) => {
         return res.status(500).json({message:"failed to login", success:false});
     }
 }
+
+export const logout = async (req,res) => {
+    try{
+        return res.status(200).cookie("token","", {maxAge:0}).json({message:"Logged out successfully", success:true});
+
+    }catch(error){
+        console.log(error);
+        return res.status(500).json({message:"failed to logout", success:false});
+    }
+}
+
+export const getUserProfile = async (req,res) => {
+    try{
+        const userId = req.id;
+        const user = await User.findById(userId).select("-password");
+        if(!user){
+            return res.status(404).json({message:"Profile not found", success:false});
+        }
+        return res.status(200).json({success:true,user});
+    
+        
+    }catch(error){
+        console.log(error);
+        return res.status(500).json({message:"failed to get profile", success:false});
+    }
+}
+
