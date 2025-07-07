@@ -9,6 +9,7 @@ import { Separator } from "@radix-ui/react-dropdown-menu"
 import { Link } from "react-router-dom"
 
 
+
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -67,7 +68,7 @@ const Navbar = () => {
                                     <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
                                 </DropdownMenuItem>
                                 <DropdownMenuItem>
-                                    Edit Profile
+                                    <Link to="/profile">Edit Profile</Link>
                                     <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />

@@ -11,7 +11,7 @@ const Course = () => {
                 <img className='w-full h-36 object-cover rounded-t-lg ' src="/image.webp" alt="course" />
             </div>
             <CardContent className='px-5 py-4 space-y-3'>
-                <h1 className='font-bold truncate hover:underline text-lg truncate'>Nextjs Complete Course in 2025</h1>
+                <h1 className='font-bold truncate hover:underline  text-lg truncate'>Nextjs Complete Course in 2025</h1>
                 <div className='flex items-center justify-between'>
                     <div className='flex items-center gap-3'>
                         <Avatar className="h-8 w-8">
