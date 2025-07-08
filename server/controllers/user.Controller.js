@@ -84,3 +84,19 @@ export const getUserProfile = async (req,res) => {
     }
 }
 
+export const updateProfile = async (req,res) => {
+    try{
+        const userId = req.id;
+        const {name} = req.body;
+        const profilePhoto = req.file;
+        const user = await User.findById(userId);
+        if(!user){
+            return res.status(404).json({message:"user not found", success:false});
+        }
+       const updatedData ={name, photoUrl};
+       
+    }catch(error){
+        console.log(error);
+        return res.status(500).json({message:"failed to update profile", success:false});
+    }
+}
