@@ -11,7 +11,13 @@ import {
 import { Input } from '@/components/ui/input'
 import { Loader2 } from 'lucide-react'
 import Course from './Course'
-import { useLoadUserQuery } from '@/features/api/authApi'
+import { useLoadUserQuery, useUpdateUserMutation } from '@/features/api/authApi'
+import { useState } from 'react'
+import { useEffect } from 'react';
+import { toast } from 'sonner'
+
+
+
 
 
 
@@ -22,16 +28,68 @@ import { useLoadUserQuery } from '@/features/api/authApi'
 
 
 const Profile = () => {
+  // State hooks
+  const [name, setName] = useState("");
+  const [profilePhoto, setProfilePhoto] = useState(null);
+  
+  // API hooks
+  const { data, isLoading } = useLoadUserQuery();
+  const [
+    updateUser, 
+    { 
+      isLoading: updateUserIsLoading, 
+      isError, 
+      error, 
+      isSuccess 
+    }
+  ] = useUpdateUserMutation();
 
-  const{data,isLoading} = useLoadUserQuery();
-console.log(data);
+  // Derived state
+  const user = data?.user;
 
+  // Effects
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success(data?.message || "Profile updated successfully");
+    }
+    if (isError && error) {
+      toast.error(error?.data?.message || "Failed to update profile");
+    }
+  }, [isSuccess, isError, error, data]);
 
-  if(isLoading){
-    return <h1>Profile Loading...</h1>
+  // Handlers
+  const onChangeHandler = (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setProfilePhoto(file);
+    }
+  };
+
+  const UpdateUserHandler = async () => {
+    if (!name && !profilePhoto) {
+      toast.warning("No changes to save");
+      return;
+    }
+    
+    const formData = new FormData();
+    if (name) formData.append("name", name);
+    if (profilePhoto) formData.append("profilePhoto", profilePhoto);
+    
+    try {
+      await updateUser(formData);
+    } catch (err) {
+      console.error("Failed to update profile:", err);
+    }
+  };
+
+  // Loading state
+  if (isLoading || !data) {
+    return (
+      <div className="flex items-center justify-center min-h-[50vh]">
+        <h1>Loading profile...</h1>
+      </div>
+    );
   }
-
-  const {user} = data;
   return (
     <div className='max-w-4xl mx-auto my-24 px-4'>
       <h1 className='text-2xl font-bold text-center md:text-left'>Profile</h1>
@@ -75,15 +133,15 @@ console.log(data);
               <div className='grid gap-4 py-4'>
                 <div className='grid grid-cols-4 items-center gap-4'>
                   <label>Name:</label>
-                  <Input type=" text" placeholder='Name' className='col-span-3' />
+                  <Input type=" text" value={name} onChange={(e)=>setName(e.target.value)} placeholder='Name' className='col-span-3' />
                 </div>
                 <div className='grid grid-cols-4 items-center gap-4'>
                   <label>Profile Photo:</label>
-                  <Input type="file" accept='image/*' placeholder='Profile Photo' className='col-span-3' />
+                  <Input type="file" onChange={onChangeHandler} accept='image/*' placeholder='Profile Photo' className='col-span-3' />
                 </div>
               </div>
-              <DialogFooter>
-                <Button disabled={isLoading}>
+              <DialogFooter> 
+                <Button disabled={isLoading} onClick={UpdateUserHandler}>
                   {
                     isLoading ? (
                       <>
@@ -113,3 +171,5 @@ console.log(data);
 }
 
 export default Profile
+
+
