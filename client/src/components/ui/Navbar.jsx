@@ -32,11 +32,26 @@ import {
   SheetTitle,
 
 } from "./sheet"
-
+import { toast } from "sonner";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useLogoutUserMutation } from "../../features/api/authApi";
 
 
 const Navbar = () => {
     const user = true // Replace this with actual auth logic
+    const [logoutUser, {data,isSuccess}] = useLogoutUserMutation();
+    const navigate = useNavigate();
+    const handleLogout = async() => {
+        await logoutUser()
+    }
+    useEffect(()=>{
+        if(isSuccess){
+            toast.success(data.message || "Logout successful");
+            navigate("/login");
+            
+        }
+    },[isSuccess])
 
 
     return (
@@ -72,7 +87,7 @@ const Navbar = () => {
                                     <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />
-                                <DropdownMenuItem>
+                                <DropdownMenuItem onClick={handleLogout}>
                                     Log out
                                     <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
                                 </DropdownMenuItem>
