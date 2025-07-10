@@ -10,6 +10,7 @@ import { Link } from "react-router-dom"
 
 
 
+
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -36,11 +37,26 @@ import { toast } from "sonner";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLogoutUserMutation } from "../../features/api/authApi";
+import { useSelector } from "react-redux";
 
 
 const Navbar = () => {
-    const user = true // Replace this with actual auth logic
-    const [logoutUser, {data,isSuccess}] = useLogoutUserMutation();
+    const {user, isAuthenticated} = useSelector((state) => state.auth);
+    // console.log('Navbar - User data:', { 
+    //     hasUser: !!user, 
+    //     isAuthenticated,
+    //     userData: user 
+    // });
+    
+    // Get the avatar URL with timestamp to prevent caching issues
+    const getAvatarUrl = () => {
+        if (!user?.photoUrl) return "https://github.com/shadcn.png";
+        // Add timestamp to prevent caching
+        const timestamp = new Date().getTime();
+        return `${user.photoUrl}?${timestamp}`;
+    };
+    
+    const [logoutUser, {data, isSuccess}] = useLogoutUserMutation();
     const navigate = useNavigate();
     const handleLogout = async() => {
         await logoutUser()
@@ -70,10 +86,19 @@ const Navbar = () => {
                 <div className='flex items-center gap-8'>
                     {user ? (
                         <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Avatar>
-                                    <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-                                    <AvatarFallback>CN</AvatarFallback>
+                            <DropdownMenuTrigger asChild> 
+                                <Avatar className="cursor-pointer">
+                                    <AvatarImage 
+                                        src={getAvatarUrl()}
+                                        alt={user?.name || 'User'} 
+                                        onError={(e) => {
+                                            e.target.src = "https://github.com/shadcn.png";
+                                        }}
+                                        className="object-cover w-full h-full"
+                                    />
+                                    <AvatarFallback className="bg-primary/10">
+                                        {user?.name?.charAt(0)?.toUpperCase() || 'U'}
+                                    </AvatarFallback>
                                 </Avatar>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent className="w-56" align="end">

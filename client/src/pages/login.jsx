@@ -16,6 +16,7 @@ import { useState, useEffect } from "react"
 import { useLoginUserMutation, useRegisterUserMutation } from "../features/api/authApi"
 import { toast } from "sonner"
 
+
 import {
   Tabs,
   TabsContent,
@@ -132,12 +133,12 @@ const Login = () => {
   return (
   <div className="flex w-full items-center justify-center mt-20">
       <div className="flex w-full max-w-sm flex-col gap-6">
-      <Tabs defaultValue="account">
+      <Tabs defaultValue="login">
         <TabsList>
-          <TabsTrigger value="account">Signup</TabsTrigger>
-          <TabsTrigger value="password">Login</TabsTrigger>
+          <TabsTrigger value="signup">Signup</TabsTrigger>
+          <TabsTrigger value="login">Login</TabsTrigger>
         </TabsList>
-        <TabsContent value="account">
+        <TabsContent value="signup">
           <Card>
             <CardHeader>
               <CardTitle>Signup</CardTitle>
@@ -177,7 +178,7 @@ const Login = () => {
             </CardFooter>
           </Card>
         </TabsContent>
-        <TabsContent value="password">
+        <TabsContent value="login">
           <Card>
             <CardHeader>
               <CardTitle>Login</CardTitle>
@@ -188,11 +189,11 @@ const Login = () => {
             <CardContent className="grid gap-6">
               <div className="grid gap-3">
                 <Label htmlFor="tabs-demo-email">Email</Label>
-                <Input type="email" name = "email" value = { loginInput.email} onChange={(e) => changeInputHandler(e,"login")} placeholder="Enter your email" required = "true"/>
+                <Input type="email" name="email" value={loginInput.email} onChange={(e) => changeInputHandler(e,"login")} placeholder="Enter your email" required={true} />
               </div>
               <div className="grid gap-3">
                 <Label htmlFor="tabs-demo-password">Password</Label>
-                <Input type="password" name = "password" value = { loginInput.password} onChange={(e) => changeInputHandler(e,"login")} placeholder="Enter your password" required = "true"/>
+                <Input type="password" name="password" value={loginInput.password} onChange={(e) => changeInputHandler(e,"login")} placeholder="Enter your password" required={true} />
               </div>
             </CardContent>
             <CardFooter>
