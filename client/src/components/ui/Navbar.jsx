@@ -19,6 +19,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuShortcut,
     DropdownMenuTrigger,
+    DropdownMenuGroup,
 } from "./dropdown-menu"
 
 
@@ -41,11 +42,15 @@ import { useSelector } from "react-redux";
 
 
 const Navbar = () => {
-    const {user, isAuthenticated} = useSelector((state) => state.auth);
+    const {user: authUser, isAuthenticated} = useSelector((state) => state.auth);
+    const user = authUser?.user; // Access the nested user object
+    
     // console.log('Navbar - User data:', { 
     //     hasUser: !!user, 
     //     isAuthenticated,
-    //     userData: user 
+    //     userData: user,
+    //     userRole: user?.role || 'No role found',
+    //     userKeys: user ? Object.keys(user) : 'No user object'
     // });
     
     // Get the avatar URL with timestamp to prevent caching issues
@@ -112,20 +117,25 @@ const Navbar = () => {
                                     <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />
+                                {user?.role === "instructor" && (
+                                    <>
+                                        <DropdownMenuItem>
+                                            <Link to="/dashboard" className="w-full">Instructor Dashboard</Link>
+                                            <DropdownMenuShortcut>⌘D</DropdownMenuShortcut>
+                                        </DropdownMenuItem>
+                                        <DropdownMenuSeparator />
+                                    </>
+                                )}
                                 <DropdownMenuItem onClick={handleLogout}>
                                     Log out
-                                    <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
-                                </DropdownMenuItem>
-                                <DropdownMenuItem>
-                                    dashboard
                                     <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
                     ) : (
                         <div className='flex items-center gap-2'>
-                            <Button variant="outline">Login</Button>
-                            <Button>Signup</Button>
+                            <Button variant="outline" onClick = {()=> navigate("/login")}>Login</Button>
+                            <Button onClick = {()=> navigate("/login")}>Signup</Button>
                         </div>
                     )}
                     <DarkMode />

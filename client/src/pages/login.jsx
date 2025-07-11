@@ -123,10 +123,10 @@ const Login = () => {
         navigate("/")
     }
     if(registerError){
-        toast.error(registerError.data.message||"Signup failed")
+        toast.error(registerError?.data?.message || "Signup failed")
     }
     if(loginError){
-        toast.error(loginError.data.message||"Login failed")
+        toast.error(loginError?.data?.message || "Login failed")
     }
   }, [loginLoading, registerLoading, loginData, registerData, loginError, registerError])
   
