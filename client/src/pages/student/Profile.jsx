@@ -59,6 +59,11 @@ const Profile = () => {
     }
   }, [isSuccess, isError, error, data]);
 
+
+  useEffect(() => {
+    refetch();
+  }, []);
+
   // Handlers
   const onChangeHandler = (e) => {
     const file = e.target.files?.[0];
