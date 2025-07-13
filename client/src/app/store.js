@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 
 import rootReducer from "./rootReducer";
 import { authApi } from "../features/api/authApi";
+import { courseApi } from "../features/api/courseApi";
 
 
 
@@ -9,7 +10,7 @@ import { authApi } from "../features/api/authApi";
 export const appStore = configureStore({
     reducer: rootReducer,
     middleware: (getDefaultMiddleware) => 
-        getDefaultMiddleware().concat(authApi.middleware)
+        getDefaultMiddleware().concat(authApi.middleware, courseApi.middleware)
 })
 
 const initializeApp = async () => {
