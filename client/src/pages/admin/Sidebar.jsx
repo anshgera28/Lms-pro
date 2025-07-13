@@ -34,7 +34,7 @@ const Sidebar = () => {
 
   const navItems = [
     { label: 'Dashboard', icon: ChartNoAxesColumn, path: '/admin/dashboard' },
-    { label: 'Courses', icon: SquareLibrary, path: '/admin/courses' },
+    { label: 'Courses', icon: SquareLibrary, path: '/admin/course' },
   ];
 
   return (
