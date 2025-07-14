@@ -15,8 +15,15 @@ export const courseApi = createApi({
                 body: data,
                 credentials: "include"
             })
+        }),
+        getCreatorCourses: builder.query({
+            query: () => ({
+                url: "",
+                method: "GET",
+                credentials: "include"
+            })
         })
     })
 })
 
-export const { useCreateCourseMutation } = courseApi 
+export const { useCreateCourseMutation, useGetCreatorCoursesQuery } = courseApi 
