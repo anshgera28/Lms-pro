@@ -62,8 +62,11 @@ const invoices = [
       paymentStatus: "Unpaid",
       totalAmount: "$300.00",
       paymentMethod: "Credit Card",
+
     },
   ]
+
+  
 
 // const CourseTable = () => {
 
@@ -151,7 +154,11 @@ const CourseTable = () => {
               </TableCell>
               <TableCell className="truncate max-w-xs">{course?.courseTitle}</TableCell>
               <TableCell className="text-right">
-                <Button size="icon" variant="ghost">
+                <Button 
+                  size="icon" 
+                  variant="ghost"
+                  onClick={() => navigate(`/admin/course/${course._id}`)}
+                >
                   <Edit className="h-4 w-4" />
                 </Button>
               </TableCell>

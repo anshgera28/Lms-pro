@@ -1,29 +1,76 @@
-import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react";
+// import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react";
 
- const COURSE_API = "http://localhost:8080/api/v1/course"
+
+//  const COURSE_API = "http://localhost:8080/api/v1/course"
+// export const courseApi = createApi({
+//     reducerPath: "courseApi",
+//     tagTypes: ["refetch_Creator_Courses"],
+//     baseQuery: fetchBaseQuery({
+//         baseUrl: COURSE_API,
+//         credentials: "include"
+//     }),
+//     endpoints: (builder) => ({
+//         createCourse: builder.mutation({
+//             query: (data) => ({
+//                 url: "/",
+//                 method: "POST",
+//                 body: data,
+           
+//             }),                                                                                                                 
+//             invalidatesTags: ["refetch_Creator_Courses"],
+//         }),
+//         getCreatorCourses: builder.query({
+//             query: () => ({
+//                 url: "",
+//                 method: "GET",
+//             }),
+//             invalidatesTags: ["refetch_Creator_Courses"],
+//         })
+//     })
+// })
+
+// export const { useCreateCourseMutation, useGetCreatorCoursesQuery } = courseApi 
+
+
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+
+// Base API endpoint
+const COURSE_API = "http://localhost:8080/api/v1/course";
+
+// Create the API slice
 export const courseApi = createApi({
-    reducerPath: "courseApi",
-    baseQuery: fetchBaseQuery({
-        baseUrl: COURSE_API,
-        credentials: "include"
+  reducerPath: "courseApi", // Unique key for the reducer
+  tagTypes: ["refetch_Creator_Courses"], // Tag used to trigger re-fetches
+  baseQuery: fetchBaseQuery({
+    baseUrl: COURSE_API,
+    credentials: "include", // include cookies for auth/session
+  }),
+  endpoints: (builder) => ({
+    // Mutation for creating a course
+    createCourse: builder.mutation({
+      query: (data) => ({
+        url: "/",
+        method: "POST",
+        body: data,
+      }),
+      // When createCourse is called, invalidate this tag
+      invalidatesTags: ["refetch_Creator_Courses"],
     }),
-    endpoints: (builder) => ({
-        createCourse: builder.mutation({
-            query: (data) => ({
-                url: "/",
-                method: "POST",
-                body: data,
-                credentials: "include"
-            })
-        }),
-        getCreatorCourses: builder.query({
-            query: () => ({
-                url: "",
-                method: "GET",
-                credentials: "include"
-            })
-        })
-    })
-})
 
-export const { useCreateCourseMutation, useGetCreatorCoursesQuery } = courseApi 
+    // Query for getting all creator courses
+    getCreatorCourses: builder.query({
+      query: () => ({
+        url: "", // gets all courses from base URL
+        method: "GET",
+      }),
+      // This query provides the tag
+      providesTags: ["refetch_Creator_Courses"],
+    }),
+  }),
+});
+
+// Export auto-generated React hooks
+export const {
+  useCreateCourseMutation,
+  useGetCreatorCoursesQuery,
+} = courseApi;
