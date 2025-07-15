@@ -3,6 +3,11 @@ import { Card, CardHeader, CardTitle,CardDescription, CardContent } from '@/comp
 import React from 'react'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
+import RichTextEditor from '@/components/ui/RichTextEditor'
+
+
+
+
 
 const CourseTab = () => {
     const isPublished = false;
@@ -40,7 +45,7 @@ const CourseTab = () => {
             <div className='space-y-4 mt-5'>
               <div className='space-y-2'>
                 <Label>Description</Label>
-                {/* <RichTextEditor /> */}
+               <RichTextEditor />
                 </div>  
             </div>
         </CardContent>
