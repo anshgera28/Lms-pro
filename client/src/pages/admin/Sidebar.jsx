@@ -40,7 +40,7 @@ const Sidebar = () => {
   return (
     <div className='flex h-screen'>
       {/* Sidebar navigation */}
-      <div className='hidden lg:block w-[250px] sm:w-[300px] border-r border-gray-300 dark:border-gray-700 bg-[#f0f0f0] p-6'>
+      <div className='hidden lg:block w-[250px] sm:w-[300px] border-r border-gray-300 dark:border-gray-700 bg-[#f0f0f0]sticky top-0 p-6'>
         <nav className='mt-20 space-y-4'>
           <ul className='space-y-2'>
             {navItems.map(({ label, icon: Icon, path }) => {

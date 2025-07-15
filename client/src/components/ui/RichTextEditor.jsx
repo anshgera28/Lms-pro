@@ -1,22 +1,21 @@
-// src/components/ui/RichTextEditor.jsx
-
-import React, { useState } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
-function RichTextEditor() {
-  const [value, setValue] = useState('');
+const RichTextEditor = ({ input, setInput }) => {
+  const handleChange = (content) => {
+    setInput({ ...input, description: content });
+  };
 
   return (
     <div className="border rounded-lg overflow-hidden">
       <ReactQuill
         theme="snow"
-        value={value}
-        onChange={setValue}
-        className="h-[200px] border-0"
+        value={input.description}
+        onChange={handleChange}
+        className="min-h-[10px] border-0"
       />
     </div>
   );
-}
+};
 
 export default RichTextEditor;
