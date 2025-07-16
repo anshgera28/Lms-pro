@@ -6,8 +6,9 @@ import { Input } from '@/components/ui/input'
 import RichTextEditor from '@/components/ui/RichTextEditor'
 import { Loader2 } from 'lucide-react'
 import { useState } from 'react'
+import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-
+import { useEditCourseMutation } from '@/features/api/courseApi'
 import {
     Select,
     SelectContent,
@@ -17,6 +18,9 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
+import { toast } from 'sonner'
+import { useParams } from 'react-router-dom'
+
 
 
 
@@ -35,6 +39,9 @@ const CourseTab = () => {
     });
     const [preview, setPreview] = useState('');
     const navigate = useNavigate();
+    const params = useParams();
+    const courseId = params.courseId;
+    const [editCourse,{data, isLoading, isSuccess, error}] = useEditCourseMutation();
 
     const changeEventHandler = (e) => {
         const { name, value } = e.target;
@@ -60,8 +67,33 @@ const CourseTab = () => {
             fileReader.readAsDataURL(file);
         }
     }
+    const updateCourseHandler = async() => {
+        const formData = new FormData();
+        formData.append("courseTitle", input.title);
+        formData.append("subtitle", input.subtitle);
+        formData.append("description", input.description);
+        formData.append("category", input.category);
+        formData.append("courseLevel", input.courseLevel);
+        formData.append("coursePrice", input.coursePrice);
+        formData.append("thumbnail", input.courseThumbnail);
+        await editCourse({formData, courseId});
+       
+
+    }
+
+    useEffect(() => {
+        if (isSuccess) {
+            toast.success(data.message || "Course updated successfully");
+            navigate(-1); // Go back to previous page
+        }
+        if(error){
+            toast.error(error.data.message || "Failed to update course")
+        }
+    }, [isSuccess, error, navigate]);
+
+
     const isPublished = false;
-    const isLoading = false;
+
     return (
         <Card>
             <CardHeader className="flex flex-row justify-between">
@@ -159,7 +191,7 @@ const CourseTab = () => {
                     </div>
                     <div>
                         <Button onClick={() => navigate('/admin/course')} variant="outline">Cancel</Button>
-                        <Button disabled={isLoading}>
+                        <Button disabled={isLoading} onClick={updateCourseHandler}>
                             {
                                 isLoading ? (
                                     <>

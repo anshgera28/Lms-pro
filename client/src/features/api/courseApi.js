@@ -66,6 +66,15 @@ export const courseApi = createApi({
       // This query provides the tag
       providesTags: ["refetch_Creator_Courses"],
     }),
+    editCourse: builder.mutation({
+      query: ({ formData, courseId }) => ({
+        url: `/${courseId}`,
+        method: "PUT",
+        body: formData,
+      }),
+      // When createCourse is called, invalidate this tag
+      // invalidatesTags: ["refetch_Creator_Courses"],
+    }),
   }),
 });
 
@@ -73,4 +82,5 @@ export const courseApi = createApi({
 export const {
   useCreateCourseMutation,
   useGetCreatorCoursesQuery,
+  useEditCourseMutation,
 } = courseApi;
