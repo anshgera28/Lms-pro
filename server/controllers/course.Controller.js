@@ -56,6 +56,15 @@ export const editCourse = async (req, res) => {
                 return res.status(500).json({ message: "Failed to upload thumbnail" });
             }
             courseThumbnail = cloudResponse.secure_url;
+            // Delete the temporary file from uploads folder
+            if (thumbnail.path) {
+                const fs = await import('fs');
+                try {
+                    fs.unlinkSync(thumbnail.path);
+                } catch (err) {
+                    console.error('Failed to delete temp file:', err);
+                }
+            }
         }
 
         const updatedData = {
