@@ -7,6 +7,7 @@ import RichTextEditor from '@/components/ui/RichTextEditor'
 import { Loader2 } from 'lucide-react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+
 import {
     Select,
     SelectContent,
@@ -32,11 +33,32 @@ const CourseTab = () => {
         coursePrice: '',
         courseThumbnail: '',
     });
+    const [preview, setPreview] = useState('');
     const navigate = useNavigate();
 
     const changeEventHandler = (e) => {
         const { name, value } = e.target;
         setInput({ ...input, [name]: value });
+    };
+
+    const selectCategory = (value) => {
+        setInput({ ...input, category: value });
+    };
+
+
+    const selectCourseLevel = (value) => {
+        setInput({ ...input, courseLevel: value });
+    }
+
+    // get file
+    const selectThumbnailHandler = (e) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            setInput({ ...input, courseThumbnail: file });
+            const fileReader = new FileReader();
+            fileReader.onloadend = () => setPreview(fileReader.result);
+            fileReader.readAsDataURL(file);
+        }
     }
     const isPublished = false;
     const isLoading = false;
@@ -78,8 +100,8 @@ const CourseTab = () => {
                     </div >
                     <div className='flex items-center gap-5 '>
                         <div>
-                            <Label className='mb-2 flex items-center'>Category</Label>
-                            <Select>
+                            <Label className='mb-2 flex items-center' >Category</Label>
+                            <Select onValueChange={selectCategory}>
                                 <SelectTrigger className="w-[180px]">
                                     <SelectValue placeholder="Select a category" />
                                 </SelectTrigger>
@@ -101,7 +123,7 @@ const CourseTab = () => {
                         </div>
                         <div>
                             <Label className='mb-2 flex items-center'>Course Level</Label>
-                            <Select>
+                            <Select onValueChange={selectCourseLevel}>
                                 <SelectTrigger className="w-[180px]">
                                     <SelectValue placeholder="Select a course level" />
                                 </SelectTrigger>
@@ -123,7 +145,17 @@ const CourseTab = () => {
                     </div>
                     <div>
                         <Label className='mb-2 w-fit'>Course Thumbnail</Label>
-                        <Input type="file" accept="image/*" name="courseThumbnail" />
+                        <Input type="file" onChange={selectThumbnailHandler} accept="image/*" name="courseThumbnail" className='w-fit' />
+                        {
+                            preview && (
+                                <img
+                                    src={preview}
+                                    alt="preview"
+                                    className="w-72 h-32 object-cover rounded-md border"
+                                />
+                            )
+                        }
+
                     </div>
                     <div>
                         <Button onClick={() => navigate('/admin/course')} variant="outline">Cancel</Button>

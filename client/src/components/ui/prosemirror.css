@@ -1,0 +1,6 @@
+/* ProseMirror expects this, and TipTap uses ProseMirror under the hood */
+.tiptap {
+  white-space: pre-wrap;
+  word-break: break-word;
+  outline: none;
+}

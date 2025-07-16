@@ -1,19 +1,19 @@
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+import { useEditor, EditorContent } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
+import './prosemirror.css';
 
 const RichTextEditor = ({ input, setInput }) => {
-  const handleChange = (content) => {
-    setInput({ ...input, description: content });
-  };
+  const editor = useEditor({
+    extensions: [StarterKit],
+    content: input.description || '',
+    onUpdate: ({ editor }) => {
+      setInput({ ...input, description: editor.getHTML() });
+    },
+  });
 
   return (
     <div className="border rounded-lg overflow-hidden">
-      <ReactQuill
-        theme="snow"
-        value={input.description}
-        onChange={handleChange}
-        className="min-h-[10px] border-0"
-      />
+      <EditorContent editor={editor} className="min-h-[10px] border-0" />
     </div>
   );
 };
