@@ -82,3 +82,10 @@ npm-debug.log*
 
 # Local development
 *.local
+uploads
+uploads/*
+uploads/**
+package-lock.json
+package.json
+.env
+
