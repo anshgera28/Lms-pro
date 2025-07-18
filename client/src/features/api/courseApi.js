@@ -63,7 +63,7 @@ export const courseApi = createApi({
         url: "", // gets all courses from base URL
         method: "GET",
       }),
-      // This query provides the tag
+     
       providesTags: ["refetch_Creator_Courses"],
     }),
     editCourse: builder.mutation({
@@ -72,15 +72,20 @@ export const courseApi = createApi({
         method: "PUT",
         body: formData,
       }),
-      // When createCourse is called, invalidate this tag
-      // invalidatesTags: ["refetch_Creator_Courses"],
+      invalidatesTags: ["refetch_Creator_Courses"],
+    }),
+    getCourseById: builder.query({
+      query: (courseId) => ({ 
+        url: `/${courseId}`,
+        method: "GET",
+      }),
     }),
   }),
 });
 
-// Export auto-generated React hooks
 export const {
   useCreateCourseMutation,
   useGetCreatorCoursesQuery,
   useEditCourseMutation,
+  useGetCourseByIdQuery,
 } = courseApi;

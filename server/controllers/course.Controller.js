@@ -84,3 +84,19 @@ export const editCourse = async (req, res) => {
         res.status(500).json({ message: "Failed to edit course" });
     }
 }
+
+
+
+export const getCourseById = async (req, res) => {
+    try{
+        const {courseId} = req.params;
+        const course = await Course.findById(courseId);
+        if(!course){
+            return res.status(404).json({message:"Course not found"});
+        }
+        return res.status(200).json({message:"Course fetched successfully", course});
+    }catch(error){
+        console.log(error);
+        res.status(500).json({ message: "Failed to get course" });
+    }
+}

@@ -9,6 +9,7 @@ import { useState } from 'react'
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useEditCourseMutation } from '@/features/api/courseApi'
+
 import {
     Select,
     SelectContent,
@@ -20,6 +21,9 @@ import {
 } from "@/components/ui/select"
 import { toast } from 'sonner'
 import { useParams } from 'react-router-dom'
+import { useGetCourseByIdQuery } from '@/features/api/courseApi'
+
+
 
 
 
@@ -37,10 +41,28 @@ const CourseTab = () => {
         coursePrice: '',
         courseThumbnail: '',
     });
-    const [preview, setPreview] = useState('');
-    const navigate = useNavigate();
     const params = useParams();
     const courseId = params.courseId;
+    const {data: courseByIdData, isLoading: courseByIdLoading} = useGetCourseByIdQuery(courseId, {refetchOnMountOrArgChange: true});
+
+    useEffect(() => {
+        if (courseByIdData?.course) {
+            const course = courseByIdData.course;
+            setInput({
+                title: course.courseTitle ?? "",
+                subtitle: course.subTitle ?? "",
+                description: course.description ?? "",
+                category: course.category ?? "",
+                courseLevel: course.courseLevel ?? "",
+                coursePrice: course.coursePrice?.toString() ?? "",
+                courseThumbnail: "",
+            });
+        }
+    }, [courseByIdData]);
+    const [preview, setPreview] = useState('');
+    const navigate = useNavigate();
+
+ 
     const [editCourse,{data, isLoading, isSuccess, error}] = useEditCourseMutation();
 
     const changeEventHandler = (e) => {
@@ -90,8 +112,9 @@ const CourseTab = () => {
             toast.error(error.data.message || "Failed to update course")
         }
     }, [isSuccess, error, navigate]);
-
-
+    if(courseByIdLoading){
+        return <Loader2 className=" h-4 w-4 animate-spin" />
+    }
     const isPublished = false;
 
     return (
