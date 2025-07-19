@@ -89,6 +89,12 @@ export const courseApi = createApi({
       }),
       invalidatesTags: ["refetch_Creator_Courses"],
     }),
+    getCourseLecture: builder.query({
+      query: (courseId) => ({
+        url: `/${courseId}/lecture`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -97,5 +103,6 @@ export const {
   useGetCreatorCoursesQuery,
   useEditCourseMutation,
   useGetCourseByIdQuery,
-  useCreateLectureMutation
+  useCreateLectureMutation,
+  useGetCourseLectureQuery
 } = courseApi;

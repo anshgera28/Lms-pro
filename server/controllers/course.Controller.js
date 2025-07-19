@@ -123,3 +123,19 @@ export const createLecture = async (req, res) => {
         res.status(500).json({ message: "Failed to create lecture" });
     }
 }
+
+export const getCourseLecture = async (req, res) => {
+    try{
+        const {courseId} = req.params;
+        const course = await Course.findById(courseId).populate("lectures");
+        if(!course){
+            return res.status(404).json({message:"Course not found"});
+        }
+        return res.status(200).json({message:"Course fetched successfully", lectures:course.lectures});
+    }catch(error){
+        console.log(error);
+        res.status(500).json({ message: "Failed to get lecture" });
+    }
+}
+
+
