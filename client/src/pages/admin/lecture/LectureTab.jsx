@@ -5,8 +5,50 @@ import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { CardContent } from '@/components/ui/card'
 import { Switch } from '@/components/ui/switch'
+import { useState } from 'react'
+import axios from 'axios'
+import { toast } from 'sonner'
+import { Progress } from '@/components/ui/progress'
+
+
+const MEDIA_API = "http://localhost:8080/api/v1/media";
 
 const LectureTab = () => {
+
+
+    const [title,setTitle] = useState("")
+    const [uploadVideoInfo,setUploadVideoInfo] = useState(null)
+    const [isFree,setIsFree] = useState(false)
+    const [mediaProgress,setMediaProgress] = useState(false)
+    const [uploadProgress,setUploadProgress] = useState(false)
+    const  [btnDisabled,setBtnDisabled] = useState(true)
+
+    const fileChangeHandler = async(e) => {
+        const file = e.target.files[0];
+        if(file){
+            const formData = new FormData();
+            formData.append("file",file);
+            setMediaProgress(true);
+            try{
+                const res = await axios.post(`${MEDIA_API}/upload-video`, formData, {
+                   onUploadProgress: ({loaded,total}) => {
+                       setUploadProgress(Math.round((loaded / total) * 100));
+                   }
+                })
+                if(res.data.success){
+                    setUploadVideoInfo({videUrl:res.data.data.url, publicId:res.data.data.public_id});
+                    setBtnDisabled(false);
+                    toast.success(res.data.message);
+                }
+
+            }catch(error){
+                console.log(error);
+                toast.error("Video upload failed");
+            }finally{
+                setMediaProgress(false);
+            }
+        }
+    }
   return (
     <Card>
         <CardHeader className='flex justify-between '>
@@ -37,6 +79,7 @@ const LectureTab = () => {
                   className='mt-2 w-fit'
                   type='file'
                   accept='video/*'
+                  onChange={fileChangeHandler}
                   placeholder='Enter Lecture Video'
                   />
             </div>
@@ -44,6 +87,14 @@ const LectureTab = () => {
                 <Switch id = "airplane-mode"/>
                 <Label htmlFor="airplane-mode">Is this video free? </Label>
             </div>
+            {
+                mediaProgress ? (
+                    <div className='my-4'>
+                        <Progress value={uploadProgress} />
+                        <p>{uploadProgress}% uploaded</p>
+                    </div>
+                ) : null
+            }
             <div className='mt-4'>
                 <Button variant="default">Update Lecture</Button>
             </div>         

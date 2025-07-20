@@ -138,4 +138,16 @@ export const getCourseLecture = async (req, res) => {
     }
 }
 
+// hold for a minute
+export const editLecture = async (req, res) => {
+    try{
+        const {lectureTitle,videoInfo,isPreviewFree} = req.body;
+       
+
+    }catch(error){
+        console.log(error);
+        res.status(500).json({ message: "Failed to edit lecture" });
+    }
+}
+
 
