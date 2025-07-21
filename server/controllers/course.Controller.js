@@ -182,10 +182,13 @@ export const removeLecture = async (req, res) => {
         }
 
         // Remove lecture reference from course
-        await Course.updateOne(
-            { lectures: lectureId },
-            { $pull: { lectures: lectureId } }
-        );
+        const course = await Course.findOne({ lectures: lectureId });
+        if (course) {
+            await Course.updateOne(
+                { _id: course._id },
+                { $pull: { lectures: lectureId } }
+            );
+        }
 
         return res.status(200).json({ message: "Lecture removed successfully", lecture });
     } catch (error) {
@@ -208,3 +211,4 @@ export const getLectureById = async (req, res) => {
         res.status(500).json({ message: "Failed to get lecture by id" });
     }
 }
+  

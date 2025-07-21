@@ -11,6 +11,8 @@ import { toast } from 'sonner'
 import { Progress } from '@/components/ui/progress'
 import { useEditLectureMutation } from '@/features/api/courseApi'
 import { useParams } from 'react-router-dom'
+import { useEffect } from 'react'
+import { useRemoveLectureMutation } from '@/features/api/courseApi'
 
 
 const MEDIA_API = "http://localhost:8080/api/v1/media";
@@ -28,6 +30,7 @@ const LectureTab = () => {
     const {courseId,lectureId} = params;
 
     const [ editLecture, {data, isLoading, error, isSuccess}] = useEditLectureMutation()
+    const [removeLecture,{ data:removeData,isLoading:removeLoading,isSuccess:removeSuccess} ] = useRemoveLectureMutation()
 
     const fileChangeHandler = async(e) => {
         const file = e.target.files[0];
@@ -42,7 +45,7 @@ const LectureTab = () => {
                    }
                 })
                 if(res.data.success){
-                    setUploadVideoInfo({videUrl:res.data.data.url, publicId:res.data.data.public_id});
+                    setUploadVideoInfo({videoUrl:res.data.data.url, publicId:res.data.data.public_id});
                     setBtnDisabled(false);
                     toast.success(res.data.message);
                 }
@@ -59,11 +62,15 @@ const LectureTab = () => {
     const editLectureHandler = async() => {
         await editLecture({
           lectureTitle,
-         uploadVideoInfo,
-         isFree,
+          videoInfo : uploadVideoInfo,
+         isPreviewFree : isFree,
          courseId,
          lectureId
         })
+    }
+
+    const removeLectureHandler = async() => {
+        await removeLecture(lectureId)
     }
 
     useEffect(() => {
@@ -74,6 +81,12 @@ const LectureTab = () => {
             toast.error(error.data.message);
         }
     },[isSuccess, error])
+
+   useEffect(() => {
+    if(removeSuccess){
+        toast.success(removeData.message);
+    }
+   },[removeSuccess])
 
   return (
     <Card>
@@ -87,7 +100,7 @@ const LectureTab = () => {
                 </CardDescription>
             </div>
             <div className='flex items-center gap-2'>
-                <Button variant="destructive">Remove Lecture</Button>
+                <Button variant="destructive" onClick={removeLectureHandler}>Remove Lecture</Button>
             </div>
         </CardHeader>
         <CardContent>
@@ -96,6 +109,8 @@ const LectureTab = () => {
                 <Input
                   className='mt-2'
                   type='text'
+                  value={lectureTitle}
+                  onChange={(e) => setLectureTitle(e.target.value)}
                   placeholder='Enter Lecture Title'
                   />
             </div>
