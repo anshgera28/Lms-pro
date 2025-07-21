@@ -9,6 +9,8 @@ import { useState } from 'react'
 import axios from 'axios'
 import { toast } from 'sonner'
 import { Progress } from '@/components/ui/progress'
+import { useEditLectureMutation } from '@/features/api/courseApi'
+import { useParams } from 'react-router-dom'
 
 
 const MEDIA_API = "http://localhost:8080/api/v1/media";
@@ -16,12 +18,16 @@ const MEDIA_API = "http://localhost:8080/api/v1/media";
 const LectureTab = () => {
 
 
-    const [title,setTitle] = useState("")
+    const [lectureTitle,setLectureTitle] = useState("")
     const [uploadVideoInfo,setUploadVideoInfo] = useState(null)
     const [isFree,setIsFree] = useState(false)
     const [mediaProgress,setMediaProgress] = useState(false)
     const [uploadProgress,setUploadProgress] = useState(false)
     const  [btnDisabled,setBtnDisabled] = useState(true)
+    const params = useParams();
+    const {courseId,lectureId} = params;
+
+    const [ editLecture, {data, isLoading, error, isSuccess}] = useEditLectureMutation()
 
     const fileChangeHandler = async(e) => {
         const file = e.target.files[0];
@@ -49,6 +55,26 @@ const LectureTab = () => {
             }
         }
     }
+
+    const editLectureHandler = async() => {
+        await editLecture({
+          lectureTitle,
+         uploadVideoInfo,
+         isFree,
+         courseId,
+         lectureId
+        })
+    }
+
+    useEffect(() => {
+        if(isSuccess){
+            toast.success(data.message);
+        }
+        if(error){
+            toast.error(error.data.message);
+        }
+    },[isSuccess, error])
+
   return (
     <Card>
         <CardHeader className='flex justify-between '>
@@ -96,7 +122,7 @@ const LectureTab = () => {
                 ) : null
             }
             <div className='mt-4'>
-                <Button variant="default">Update Lecture</Button>
+                <Button onClick={editLectureHandler}>Update Lecture</Button>
             </div>         
         </CardContent>
     </Card>
