@@ -231,3 +231,16 @@ export const tooglePublishCourse = async (req, res) => {
         res.status(500).json({ message: "Failed to toggle publish course" });
     }
 } 
+
+export const getPublicCourses = async (_, res) => {
+    try{
+        const courses = await Course.find({isPublished:true}).populate({path:"creator",select:"name photoUrl"});
+        if(!courses){
+            return res.status(404).json({message:"Courses not found"});
+        }
+        return res.status(200).json({message:"Courses fetched successfully", courses});
+    }catch(error){
+        console.log(error);
+        res.status(500).json({ message: "Failed to get public courses" });
+    }
+}

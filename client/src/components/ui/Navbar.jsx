@@ -83,7 +83,9 @@ const Navbar = () => {
                 <div className='flex items-center gap-4'>
                     <div className='flex items-center gap-2'>
                         <School size={30} />
-                        <h1 className='font-extrabold text-2xl hidden md:block'>E-Learning</h1>
+                      <Link to = "/">
+                      <h1 className='font-extrabold text-2xl hidden md:block'>E-Learning</h1>
+                      </Link>
                     </div>
                 </div>
 
