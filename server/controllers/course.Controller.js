@@ -149,9 +149,9 @@ export const editLecture = async (req, res) => {
             return res.status(404).json({message:"Lecture not found"});
         }
         if(lectureTitle) lecture.lectureTitle = lectureTitle;
-        if(videoInfo.videoUrl) lecture.videoUrl = videoInfo.videoUrl;
-        if(videoInfo.publicId) lecture.publicId = videoInfo.publicId;
-        if(isPreviewFree) lecture.isPreviewFree = isPreviewFree;
+        if(videoInfo?.videoUrl) lecture.videoUrl = videoInfo.videoUrl;
+        if(videoInfo?.publicId) lecture.publicId = videoInfo.publicId;
+        lecture.isPreviewFree = isPreviewFree;
         await lecture.save();
 
         const course = await Course.findById(courseId);
@@ -212,3 +212,22 @@ export const getLectureById = async (req, res) => {
     }
 }
   
+// public unpublish 
+
+export const tooglePublishCourse = async (req, res) => {
+    try{
+        const {courseId} = req.params;
+        const {publish} = req.query;
+        const course = await Course.findById(courseId);
+        if(!course){
+            return res.status(404).json({message:"Course not found"});
+        }
+        course.isPublished = publish === "true";
+        await course.save();
+        const statusMessage = course.isPublished ? "published" : "unpublished";
+        return res.status(200).json({message:`Course ${statusMessage}`, course});
+    }catch(error){
+        console.log(error);
+        res.status(500).json({ message: "Failed to toggle publish course" });
+    }
+} 

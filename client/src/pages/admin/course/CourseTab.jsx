@@ -9,7 +9,7 @@ import { useState } from 'react'
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useEditCourseMutation } from '@/features/api/courseApi'
-
+import { usePublishCourseMutation } from '@/features/api/courseApi'
 import {
     Select,
     SelectContent,
@@ -23,14 +23,6 @@ import { toast } from 'sonner'
 import { useParams } from 'react-router-dom'
 import { useGetCourseByIdQuery } from '@/features/api/courseApi'
 
-
-
-
-
-
-
-
-
 const CourseTab = () => {
     const [input, setInput] = useState({
         title: '',
@@ -43,7 +35,9 @@ const CourseTab = () => {
     });
     const params = useParams();
     const courseId = params.courseId;
-    const {data: courseByIdData, isLoading: courseByIdLoading} = useGetCourseByIdQuery(courseId, {refetchOnMountOrArgChange: true});
+    const { data: courseByIdData, isLoading: courseByIdLoading, refetch } = useGetCourseByIdQuery(courseId, { refetchOnMountOrArgChange: true });
+
+    const [publishCourse, { }] = usePublishCourseMutation();
 
     useEffect(() => {
         if (courseByIdData?.course) {
@@ -62,8 +56,8 @@ const CourseTab = () => {
     const [preview, setPreview] = useState('');
     const navigate = useNavigate();
 
- 
-    const [editCourse,{data, isLoading, isSuccess, error}] = useEditCourseMutation();
+
+    const [editCourse, { data, isLoading, isSuccess, error }] = useEditCourseMutation();
 
     const changeEventHandler = (e) => {
         const { name, value } = e.target;
@@ -89,7 +83,7 @@ const CourseTab = () => {
             fileReader.readAsDataURL(file);
         }
     }
-    const updateCourseHandler = async() => {
+    const updateCourseHandler = async () => {
         const formData = new FormData();
         formData.append("courseTitle", input.title);
         formData.append("subtitle", input.subtitle);
@@ -98,8 +92,8 @@ const CourseTab = () => {
         formData.append("courseLevel", input.courseLevel);
         formData.append("coursePrice", input.coursePrice);
         formData.append("thumbnail", input.courseThumbnail);
-        await editCourse({formData, courseId});
-       
+        await editCourse({ formData, courseId });
+
 
     }
 
@@ -108,12 +102,24 @@ const CourseTab = () => {
             toast.success(data.message || "Course updated successfully");
             navigate(-1); // Go back to previous page
         }
-        if(error){
+        if (error) {
             toast.error(error.data.message || "Failed to update course")
         }
     }, [isSuccess, error, navigate]);
-    if(courseByIdLoading){
+    if (courseByIdLoading) {
         return <Loader2 className=" h-4 w-4 animate-spin" />
+    }
+
+    const publishStatusHandler = async (action) => {
+        try {
+            const response = await publishCourse({ courseId, query: action });
+            if (response?.data) {
+                refetch();
+                toast.success(response.data.message || "Course published successfully");
+            }
+        } catch (error) {
+            toast.error(error.data.message || "Failed to publish or unpublish course");
+        }
     }
     const isPublished = false;
 
@@ -127,9 +133,9 @@ const CourseTab = () => {
                     </CardDescription>
                 </div>
                 <div className='space-x-2'>
-                    <Button variant="outline">
+                    <Button variant="outline" onClick={() => publishStatusHandler(courseByIdData?.course.isPublished ? "false" : "true")}>
                         {
-                            isPublished ? "Unpublish" : "Publish"
+                            courseByIdData?.course.isPublished ? "Unpublish" : "Publish"
                         }
                     </Button>
                     <Button>Remove Course</Button>
