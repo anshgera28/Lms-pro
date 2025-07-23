@@ -13,6 +13,8 @@ import { useEditLectureMutation } from '@/features/api/courseApi'
 import { useParams } from 'react-router-dom'
 import { useEffect } from 'react'
 import { useRemoveLectureMutation } from '@/features/api/courseApi'
+import { Loader2 } from 'lucide-react'
+import { useGetLectureByIdQuery } from '@/features/api/courseApi'
 
 
 const MEDIA_API = "http://localhost:8080/api/v1/media";
@@ -28,6 +30,20 @@ const LectureTab = () => {
     const  [btnDisabled,setBtnDisabled] = useState(true)
     const params = useParams();
     const {courseId,lectureId} = params;
+
+    const {data:lectureData} = useGetLectureByIdQuery(lectureId)
+    const lecture = lectureData?.lecture; 
+
+    useEffect(() => {
+        if(lecture){
+            setLectureTitle(lecture.lectureTitle);
+            setIsFree(lecture.isPreviewFree);
+            setUploadVideoInfo(lecture.videoInfo);
+        }
+    },[lecture])
+
+
+
 
     const [ editLecture, {data, isLoading, error, isSuccess}] = useEditLectureMutation()
     const [removeLecture,{ data:removeData,isLoading:removeLoading,isSuccess:removeSuccess} ] = useRemoveLectureMutation()
@@ -100,7 +116,7 @@ const LectureTab = () => {
                 </CardDescription>
             </div>
             <div className='flex items-center gap-2'>
-                <Button variant="destructive" onClick={removeLectureHandler}>Remove Lecture</Button>
+                <Button variant="destructive" onClick={removeLectureHandler}>{removeLoading ? "Please wait..." : "Remove Lecture"}</Button>
             </div>
         </CardHeader>
         <CardContent>
@@ -137,7 +153,14 @@ const LectureTab = () => {
                 ) : null
             }
             <div className='mt-4'>
-                <Button onClick={editLectureHandler}>Update Lecture</Button>
+                <Button disabled={isLoading} onClick={editLectureHandler}>
+                    {
+                        isLoading ? <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Please wait...
+                        </> : "Update Lecture"
+                    }
+                </Button>
             </div>         
         </CardContent>
     </Card>
