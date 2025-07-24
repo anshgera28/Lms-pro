@@ -2,11 +2,12 @@ import { Card, CardContent } from '@/components/ui/card'
 import React from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
-
+import { Link } from 'react-router-dom'
 
 
 const Course = ({course}) => {
     return (
+        <Link to={`/course-detail/${course._id}`}>
         <Card className="overflow-hidden rounded-lg shadow-lg dark:bg-gray-800 bg-white hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer">
             <div className='relative'>
                 <img className='w-full h-36 object-cover rounded-t-lg ' src={course.courseThumbnail} alt="course" />
@@ -30,6 +31,7 @@ const Course = ({course}) => {
                 </div>
             </CardContent>
         </Card>
+        </Link>
     )
 }
 export default Course
