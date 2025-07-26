@@ -10,7 +10,7 @@ const Course = ({course}) => {
         <Link to={`/course-detail/${course._id}`}>
         <Card className="overflow-hidden rounded-lg shadow-lg dark:bg-gray-800 bg-white hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer">
             <div className='relative'>
-                <img className='w-full h-36 object-cover rounded-t-lg ' src={course.courseThumbnail} alt="course" />
+                <img className='w-full h-36 object-cover rounded-t-lg ' src={course.courseThumbnail || '/default-course.jpg'} alt="course" />
             </div>
             <CardContent className='px-5 py-4 space-y-3'>
                 <h1 className='font-bold truncate hover:underline  text-lg truncate'>{course.courseTitle}</h1>

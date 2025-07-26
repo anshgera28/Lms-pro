@@ -1,55 +1,45 @@
-import Stripe from "stripe";
+// Stripe removed for mock payment
 import { Course } from "../models/course.model.js";
 import { CoursePurchase } from "../models/coursePurchase.model.js";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+// Stripe instance removed
 
-export const createCheckoutSession = async (req,res) => {
-    try{
+export const createCheckoutSession = async (req, res) => {
+    try {
         const userId = req.id;
-        const {courseId} = req.body;
+        const { courseId, cardNumber, expiry, cvv } = req.body;
+
+        // Basic validation (no real payment processing)
+        if (!cardNumber || !expiry || !cvv) {
+            return res.status(400).json({ message: "Incomplete payment details", success: false });
+        }
+        if (cardNumber.length !== 16 || isNaN(cardNumber)) {
+            return res.status(400).json({ message: "Invalid card number", success: false });
+        }
+        if (cvv.length !== 3 || isNaN(cvv)) {
+            return res.status(400).json({ message: "Invalid CVV", success: false });
+        }
+        // Optionally, check expiry format MM/YY
+        if (!/^\d{2}\/\d{2}$/.test(expiry)) {
+            return res.status(400).json({ message: "Invalid expiry format. Use MM/YY", success: false });
+        }
 
         const course = await Course.findById(courseId);
-        if(!course){
-            return res.status(404).json({message:"Course not found"});
+        if (!course) {
+            return res.status(404).json({ message: "Course not found" });
         }
-        // create a new course purchase record
+        // Create a new course purchase record
         const newPurchase = new CoursePurchase({
             courseId,
             userId,
-            amount:course.coursePrice,
-            status:"pending"
-        })
-        // create a stripe checkout session
-        const session = await stripe.checkout.sessions.create({
-            payment_method_types:["card"],
-            line_items:[{
-                price_data:{
-                    currency:"inr",
-                    product_data:{
-                        name:course.courseTitle,
-                        images:[course.courseThumbnail],
-                    },
-                    unit_amount:course.coursePrice * 100,
-                },
-                quantity:1
-            }],
-            mode:"payment",
-            success_url:`http://localhost:3000/course-detail/${courseId}`,
-            cancel_url:`http://localhost:3000/course-detail/${courseId}`,
-            metadata:{
-                courseId : courseId,
-                userId : userId,
-            },
-            shipping_address_collection:{
-                allowed_countries:["IN"]
-            },
-            
+            amount: course.coursePrice,
+            status: "completed",
+            paymentId: `MOCK-${Date.now()}`
         });
-
-
-    }catch(error){
+        await newPurchase.save();
+        return res.status(200).json({ message: "Payment successful! Course purchased.", success: true });
+    } catch (error) {
         console.log(error);
-        
+        return res.status(500).json({ message: "Internal server error", success: false });
     }
 }
